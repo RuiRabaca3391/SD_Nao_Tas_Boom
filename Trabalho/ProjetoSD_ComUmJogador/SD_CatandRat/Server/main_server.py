@@ -3,7 +3,7 @@ from Server.server_skeleton import SkeletonServer
 
 
 def main():
-    gm = GameMech(20, 20)
+    gm = GameMech(15, 13)
     gm.print_world()
     gm.print_position(1, 1)
     gm.print_position(0, 1)
