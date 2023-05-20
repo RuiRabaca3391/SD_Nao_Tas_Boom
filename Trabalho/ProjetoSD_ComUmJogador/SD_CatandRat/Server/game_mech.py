@@ -217,11 +217,18 @@ class GameMech:
         else:
             return x, y
 
-    def someone_set_us_the_bomb(self, nr_player: int, direction: int) -> tuple:
-        x = self.players[nr_player][1][0]
-        y = self.players[nr_player][1][1]
-        name = self.players[nr_player][0]
-        self.bomb_maker(x, y)
+    def someone_set_us_the_bomb(self, nr_player: str):
+        player_order = 0
+        if nr_player == "p1":
+            x = self.players[0][1][0]
+            y = self.players[0][1][1]
+            self.bomb_maker(x, y)
+            player_order = 0
+        elif nr_player == "p2":
+            x = self.players[1][1][0]
+            y = self.players[1][1][1]
+            self.bomb_maker(x, y)
+            player_order = 1
 
 
     def print_position(self, x: int, y: int):

@@ -1,6 +1,7 @@
 import socket
 import logging
 import constante
+import pygame
 from Server.game_mech import GameMech
 # Está no lado do servidor: Skeleton to user interface (permite ter informação
 # de como comunicar com o cliente)
@@ -16,6 +17,7 @@ class SkeletonServer:
         self.s = socket.socket()
         self.s.bind((constante.ENDERECO_SERVIDOR, constante.PORTO))
         self.s.listen()
+        self.clock = pygame.time.Clock()
 
     def processa_movimento_up(self,s_c,  dados_pl):
 
@@ -54,10 +56,11 @@ class SkeletonServer:
     def processa_movimento_bomb(self, s_c,  dados_pl):
 
         # Meter depois o nome do jogador
-        new_stuff_1, new_stuff_2 = self.gm_obj.someone_set_us_the_bomb(dados_pl)
+        self.gm_obj.someone_set_us_the_bomb(dados_pl)
+        #new_stuff_1, new_stuff_2 = self.gm_obj.someone_set_us_the_bomb(dados_pl)
         # Mandar as coordenadas
-        s_c.send(new_stuff_1.to_bytes(constante.N_BYTES, byteorder="big", signed=True))
-        s_c.send(new_stuff_2.to_bytes(constante.N_BYTES, byteorder="big", signed=True))
+        #s_c.send(new_stuff_1.to_bytes(constante.N_BYTES, byteorder="big", signed=True))
+        #s_c.send(new_stuff_2.to_bytes(constante.N_BYTES, byteorder="big", signed=True))
 
     def run(self):
         logging.info("a escutar no porto " + str(constante.PORTO))
@@ -68,6 +71,7 @@ class SkeletonServer:
         dados: str = ""
         fim = False
         while fim == False:
+            dt = self.clock.tick(10)
             # Recebe o comando
             dados_recebidos: bytes = socket_client.recv(constante.TAMANHO_MENSAGEM)
             dados = dados_recebidos.decode(constante.CODIFICACAO_STR)
@@ -104,6 +108,9 @@ class SkeletonServer:
 #            if dados != constante.FIM:
 #                dados = self.eco_obj.eco(dados)
 #                socket_client.send(dados.encode(constante.CODIFICACAO_STR))
+
+            self.gm_obj.bomb_ticking(dt)
+            self.gm_obj.explosion_ticking(dt)
 
         socket_client.close()
         logging.info("o cliente com endereço o " + str(endereco) + " desligou-se!")

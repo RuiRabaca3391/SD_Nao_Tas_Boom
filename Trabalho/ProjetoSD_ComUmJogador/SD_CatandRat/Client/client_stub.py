@@ -108,6 +108,6 @@ class StubClient:
         msg = nr_player
         self.s.send(msg.encode(constante.CODIFICACAO_STR))
 
-        dados_recebidos: bytes = self.s.recv(constante.N_BYTES)
-        return int.from_bytes(dados_recebidos, byteorder='big', signed=True)
+        #dados_recebidos: bytes = self.s.recv(constante.N_BYTES)
+        #return int.from_bytes(dados_recebidos, byteorder='big', signed=True)
 
