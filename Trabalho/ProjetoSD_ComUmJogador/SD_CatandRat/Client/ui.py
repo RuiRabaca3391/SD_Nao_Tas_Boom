@@ -39,6 +39,9 @@ class Game(object):
         self.explosions = pygame.sprite.Group()
         #self.gm = game_mech.GameMech(self.x_max, self.y_max)
         self.stub = ""
+        self.wait_time = 0
+        self.go_ahead = True
+        self.go_update = True
         pygame.display.update()
 
 
@@ -72,14 +75,40 @@ class Game(object):
         w = wall8.Wall(20, 20, wall_size, self.walls)
         self.walls.add(w)
 
-    def update_bombs(self, bomb_size:int):
-        bombs_now = self.gm.get_world()
-        for x in range(0,self.x_max-1):
-            for y in range(0,self.y_max-1):
-                if bombs_now[(x, y)] != [] and bombs_now[(x, y)][0][1] == "bomb":
-                    b = bomb.Bomb(x, y, bomb_size, self.bombs)
-                    self.bombs.add(b)
+    def update_bombs(self, bomb_size: int, stub: object, dt: int):
 
+        self.wait_time += dt
+
+        if self.wait_time / 1000 >= 1:
+            lst = stub.show_bombs_client()
+            lst_x, lst_y = self.organize(lst)
+            size = len(lst_x)
+            print("x",lst_x)
+            print("y",lst_y)
+            for i in range(0, size):
+                b = bomb.Bomb(lst_x[i], lst_y[i], bomb_size, self.bombs)
+                self.bombs.add(b)
+            self.wait_time = 0
+
+        else:
+            self.players.update(self, self.stub)
+
+    def organize(self, lst: list):
+        lst_x = []
+        lst_y = []
+        size = len(lst)
+        cont = 0
+        for i in lst:
+            print("i :", i)
+            print("index : ", lst.index(i))
+            if cont == 0 or cont % 2 == 0:
+                lst_x.append(i)
+            else:
+                lst_y.append(i)
+            cont += 1
+        print("x o", lst_x)
+        print("y o", lst_y)
+        return lst_x, lst_y
 
     def update_explosions(self, explosion_size:int):
         explosion_now = self.gm.get_world()
@@ -97,6 +126,7 @@ class Game(object):
         self.create_players(self.grid_size)
         self.stub = stub
 
+
         end = False
         while end == False:
             dt = self.clock.tick(10)
@@ -106,12 +136,15 @@ class Game(object):
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                     end = True
 
-            #self.update_bombs(self.grid_size)
+            self.update_bombs(self.grid_size, self.stub, dt)
+            self.bombs.update(dt)
+
             #self.update_explosions(self.grid_size)
-            self.players.update(self, self.stub)
-            #self.bombs.update(self.gm)
+
+
+
             #self.explosions.update(self.gm)
-            #bombas = self.bombs.draw(self.screen)
+            bombas = self.bombs.draw(self.screen)
             #explosions = self.explosions.draw(self.screen)
             #self.explosions.update(dt)
 
@@ -121,11 +154,11 @@ class Game(object):
             #pygame.display.update(rects2)
             #pygame.display.update(rects3)
             pygame.display.update(rects)
-            #pygame.display.update(bombas)
+            pygame.display.update(bombas)
             #pygame.display.update(explosions)
 
             self.walls.draw(self.screen)
-            #self.bombs.draw(self.screen)  # draw bombs here
+            self.bombs.draw(self.screen)  # draw bombs here
             self.players.draw(self.screen)
             #self.explosions.draw(self.screen)
             self.draw_grid(self.black)
@@ -133,7 +166,8 @@ class Game(object):
             pygame.display.update()
 
             self.players.clear(self.screen,self.background)
-            #self.bombs.clear(self.screen, self.background)
+            self.bombs.clear(self.screen, self.background)
+
             #self.explosions.clear(self.screen, self.background)
 
             # Verify if somebody blew up

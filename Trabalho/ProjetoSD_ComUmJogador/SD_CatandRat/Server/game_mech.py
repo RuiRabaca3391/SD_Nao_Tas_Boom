@@ -25,11 +25,27 @@ class GameMech:
         self.world[(2, 2)].append(["player", "p2", 1])
 
     # Placing bombs in the grid
-    def bomb_maker(self, x, y):
+    def bomb_maker(self, nr_player):
+        if nr_player == "p1":
+            x = self.players[0][1][0]
+            y = self.players[0][1][1]
+        elif nr_player == "p2":
+            x = self.players[1][1][0]
+            y = self.players[1][1][1]
+
         if len(self.world[(x, y)]) == 1:
             nr_bombs = len(self.bombs)
             self.bombs[nr_bombs] = ["bomb", (x, y)]
             self.world[(x, y)].append(["obst", "bomb", nr_bombs, 0])
+
+    def collect_bombs(self):
+        lst = []
+        for x in range(0, self.x_max - 1):
+            for y in range(0, self.y_max - 1):
+                if self.world[(x, y)] != [] and self.world[(x, y)][0][1] == "bomb":
+                    lst.append(x)
+                    lst.append(y)
+        return lst
 
     # Tracking time ticks for bombs and calling explosion the time ticks function
     def bomb_ticking(self, ticks):

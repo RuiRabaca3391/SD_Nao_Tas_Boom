@@ -35,6 +35,7 @@ class Player(pygame.sprite.DirtySprite):
         self.dirty = 1
 
     def update(self, game: object, stub: object):
+
         last = self.rect.copy()
         key = pygame.key.get_pressed()
         # Para qualqer tecla, há que pedir ao Game Mech que nova posição
@@ -78,5 +79,6 @@ class Player(pygame.sprite.DirtySprite):
                 new.bottom = cell.top
             if last.top >= cell.bottom and new.top < cell.bottom:
                 new.top = cell.bottom
+        #game.update_bombs(self.sq_size, stub)
         # Keep visible
         self.dirty = 1

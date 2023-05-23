@@ -47,10 +47,13 @@ class StubClient:
         # Manda o numero do jogador
         msg = nr_player
         self.s.send(msg.encode(constante.CODIFICACAO_STR))
-
+        print("Meio Baixo Stub")
         lst = []
         dados_recebidos_1: bytes = self.s.recv(constante.N_BYTES)
         dados_recebidos_2: bytes = self.s.recv(constante.N_BYTES)
+        print("Mensagem recebidas stub")
+        print("X : ", int.from_bytes(dados_recebidos_1, byteorder='big', signed=True))
+        print("Y : ", int.from_bytes(dados_recebidos_2, byteorder='big', signed=True))
 
         lst.append(int.from_bytes(dados_recebidos_1, byteorder='big', signed=True))
         lst.append(int.from_bytes(dados_recebidos_2, byteorder='big', signed=True))
@@ -99,7 +102,7 @@ class StubClient:
         return lst
 
 
-    def espaco(self, nr_player: str) -> Union[int, None]:
+    def espaco(self, nr_player: str):
 
         msg = constante.ESPACO
         self.s.send(msg.encode(constante.CODIFICACAO_STR))
@@ -108,6 +111,25 @@ class StubClient:
         msg = nr_player
         self.s.send(msg.encode(constante.CODIFICACAO_STR))
 
-        #dados_recebidos: bytes = self.s.recv(constante.N_BYTES)
-        #return int.from_bytes(dados_recebidos, byteorder='big', signed=True)
+    def show_bombs_client(self):
 
+        msg = constante.SHOW_BOMBS
+        self.s.send(msg.encode(constante.CODIFICACAO_STR))
+
+        # Manda o numero do jogador
+        msg = "fake"
+        self.s.send(msg.encode(constante.CODIFICACAO_STR))
+
+        lst = []
+
+        # Recebe o tamanho
+        dados_recebidos_size: bytes = self.s.recv(constante.N_BYTES)
+        size = int.from_bytes(dados_recebidos_size, byteorder='big', signed=True)
+        print(size)
+        if size != 0:
+            lst = []
+            for i in range(size):
+                dados_recebidos_coords: bytes = self.s.recv(constante.N_BYTES)
+                lst.append(int.from_bytes(dados_recebidos_coords, byteorder='big', signed=True))
+            print("Server gettting : ", lst)
+        return lst

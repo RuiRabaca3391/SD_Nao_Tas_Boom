@@ -18,7 +18,7 @@ class Bomb(pygame.sprite.Sprite):
     def get_size(self):
         return self.new_size
 
-    def update(self, game: object, dt):
+    def update(self, dt):
         self.ticks += dt
         #world_now = game.world[(self.pos_x, self.pos_y)]
         #print("Time", world_now)

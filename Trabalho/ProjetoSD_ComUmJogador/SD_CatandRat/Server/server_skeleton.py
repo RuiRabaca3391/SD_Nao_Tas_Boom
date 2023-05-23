@@ -56,11 +56,29 @@ class SkeletonServer:
     def processa_movimento_bomb(self, s_c,  dados_pl):
 
         # Meter depois o nome do jogador
-        self.gm_obj.someone_set_us_the_bomb(dados_pl)
-        #new_stuff_1, new_stuff_2 = self.gm_obj.someone_set_us_the_bomb(dados_pl)
-        # Mandar as coordenadas
-        #s_c.send(new_stuff_1.to_bytes(constante.N_BYTES, byteorder="big", signed=True))
-        #s_c.send(new_stuff_2.to_bytes(constante.N_BYTES, byteorder="big", signed=True))
+        self.gm_obj.bomb_maker(dados_pl)
+
+    def collect_and_send_bombs(self, s_c):
+
+        lst = []
+
+        for x in range(0, self.gm_obj.x_max - 1):
+            for y in range(0, self.gm_obj.y_max - 1):
+                if self.gm_obj.world[(x, y)] != [] and self.gm_obj.world[(x, y)][0][1] == "bomb":
+                    lst.append(x)
+                    lst.append(y)
+
+        size = len(lst)
+        s_c.send(size.to_bytes(constante.N_BYTES, byteorder="big", signed=True))
+        if size != 0:
+            lst = self.gm_obj.collect_bombs()
+            for i in lst:
+                s_c.send(i.to_bytes(constante.N_BYTES, byteorder="big", signed=True))
+        return lst
+
+
+
+    # def collect_and_send_explosions(self, s_c):
 
     def run(self):
         logging.info("a escutar no porto " + str(constante.PORTO))
@@ -79,9 +97,19 @@ class SkeletonServer:
             # Recebe o player
             dados_recebidos: bytes = socket_client.recv(constante.TAMANHO_MENSAGEM)
             dados_pl = dados_recebidos.decode(constante.CODIFICACAO_STR)
+
+
             if dados != "":
                 logging.debug("o cliente enviou: \"" + dados + "\"")
                 logging.debug("o cliente enviou: \"" + dados_pl + "\"")
+
+            if dados == constante.SHOW_BOMBS:
+
+                self.collect_and_send_bombs(socket_client)
+
+            #if dados == constante.SHOW_EXPLOSIONS:
+
+                #self.processa_movimento_up(socket_client)
 
             if dados == constante.CIMA:
 
