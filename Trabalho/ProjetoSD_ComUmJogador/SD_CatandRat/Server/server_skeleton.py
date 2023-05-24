@@ -58,27 +58,42 @@ class SkeletonServer:
         # Meter depois o nome do jogador
         self.gm_obj.bomb_maker(dados_pl)
 
-    def collect_and_send_bombs(self, s_c):
+    def collect_and_send_progress(self, s_c):
 
-        lst = []
+        lst_b = []
+        lst_e = []
 
+        # Para as bombas
         for x in range(0, self.gm_obj.x_max - 1):
             for y in range(0, self.gm_obj.y_max - 1):
                 if self.gm_obj.world[(x, y)] != [] and self.gm_obj.world[(x, y)][0][1] == "bomb":
-                    lst.append(x)
-                    lst.append(y)
+                    lst_b.append(x)
+                    lst_b.append(y)
 
-        size = len(lst)
+        size = len(lst_b)
         s_c.send(size.to_bytes(constante.N_BYTES, byteorder="big", signed=True))
         if size != 0:
             lst = self.gm_obj.collect_bombs()
             for i in lst:
                 s_c.send(i.to_bytes(constante.N_BYTES, byteorder="big", signed=True))
-        return lst
 
+        # Para as explosões
+        for x in range(0, self.gm_obj.x_max - 1):
+            for y in range(0, self.gm_obj.y_max - 1):
+                if self.gm_obj.world[(x, y)] != [] and self.gm_obj.world[(x, y)][0][1] == "explosion":
+                    print("I Exist")
+                    lst_e.append(x)
+                    lst_e.append(y)
 
+        size = len(lst_e)
+        s_c.send(size.to_bytes(constante.N_BYTES, byteorder="big", signed=True))
+        if size != 0:
+            lst = self.gm_obj.collect_explosions()
+            print("Lista exp : ", lst)
+            for i in lst:
+                s_c.send(i.to_bytes(constante.N_BYTES, byteorder="big", signed=True))
 
-    # def collect_and_send_explosions(self, s_c):
+        return lst_b, lst_e
 
     def run(self):
         logging.info("a escutar no porto " + str(constante.PORTO))
@@ -103,13 +118,9 @@ class SkeletonServer:
                 logging.debug("o cliente enviou: \"" + dados + "\"")
                 logging.debug("o cliente enviou: \"" + dados_pl + "\"")
 
-            if dados == constante.SHOW_BOMBS:
+            if dados == constante.SHOW_PROGRESSION:
 
-                self.collect_and_send_bombs(socket_client)
-
-            #if dados == constante.SHOW_EXPLOSIONS:
-
-                #self.processa_movimento_up(socket_client)
+                self.collect_and_send_progress(socket_client)
 
             if dados == constante.CIMA:
 

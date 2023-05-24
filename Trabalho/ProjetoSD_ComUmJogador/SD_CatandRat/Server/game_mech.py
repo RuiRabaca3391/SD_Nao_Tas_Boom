@@ -47,6 +47,15 @@ class GameMech:
                     lst.append(y)
         return lst
 
+    def collect_explosions(self):
+        lst = []
+        for x in range(0, self.x_max - 1):
+            for y in range(0, self.y_max - 1):
+                if self.world[(x, y)] != [] and self.world[(x, y)][0][1] == "explosion":
+                    lst.append(x)
+                    lst.append(y)
+        return lst
+
     # Tracking time ticks for bombs and calling explosion the time ticks function
     def bomb_ticking(self, ticks):
         for x in range(0, self.x_max - 1):
@@ -67,27 +76,29 @@ class GameMech:
 
     # Crossing explosion pattern and checking surroundings for walls
     def explosion_maker(self, x, y):
-        if self.world[(x, y + 1)] == [] or self.world[(x, y + 1)][0][1] != ["wall"]:
+        if self.world[(x, y + 1)] == [] or self.world[(x, y + 1)][0][1] != "wall":
             nr_explosions = len(self.explosions)
             self.explosions[nr_explosions] = ["explosion", (x, y + 1)]
             self.world[(x, y + 1)].append(["obst", "explosion", nr_explosions, 0])
-            #print("y + 1")
+            print(self.world[(x, y + 1)])
 
-        if self.world[(x, y - 1)] == [] or self.world[(x, y - 1)][0][1] != ["wall"]:
+        if self.world[(x, y - 1)] == [] or self.world[(x, y - 1)][0][1] != "wall":
             nr_explosions = len(self.explosions)
             self.explosions[nr_explosions] = ["explosion", (x, y - 1)]
             self.world[(x, y - 1)].append(["obst", "explosion", nr_explosions, 0])
-            #print("y - 1")
+            print(self.world[(x, y - 1)])
 
-        if self.world[(x + 1, y)] == [] or self.world[(x + 1, y)][0][1] != ["wall"]:
+        if self.world[(x + 1, y)] == [] or self.world[(x + 1, y)][0][1] != "wall":
             nr_explosions = len(self.explosions)
             self.explosions[nr_explosions] = ["explosion", (x + 1, y)]
             self.world[(x + 1, y)].append(["obst", "explosion", nr_explosions, 0])
+            print(self.world[(x + 1, y)])
 
-        if self.world[(x - 1, y)] == [] or self.world[(x - 1, y)][0][1] != ["wall"]:
+        if self.world[(x - 1, y)] == [] or self.world[(x - 1, y)][0][1] != "wall":
             nr_explosions = len(self.explosions)
             self.explosions[nr_explosions] = ["explosion", (x - 1, y)]
             self.world[(x - 1, y)].append(["obst", "explosion", nr_explosions, 0])
+            print(self.world[(x - 1, y)])
 
     # Checking if everybody is still in one piece
     def somebody_blew_up(self):
@@ -108,7 +119,7 @@ class GameMech:
                 if self.world[(x, y)] != [] and self.world[(x, y)][0][1] == "explosion":
                     self.world[(x, y)][0][3] += ticks
                     # print(self.world[(x, y)][0][3])
-                    if self.world[(x, y)][0][3] / 1000 >= 1.5:
+                    if self.world[(x, y)][0][3] / 1000 >= 4:
                         # print(self.world[(x, y)])
                         self.world[(x, y)].remove(self.world[(x, y)][0])
                         # print(self.world[(x, y)])

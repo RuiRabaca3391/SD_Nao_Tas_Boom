@@ -80,16 +80,18 @@ class Game(object):
         self.wait_time += dt
 
         if self.wait_time / 1000 >= 1:
-            lst = stub.show_bombs_client()
-            lst_x, lst_y = self.organize(lst)
-            size = len(lst_x)
-            print("x",lst_x)
-            print("y",lst_y)
-            for i in range(0, size):
-                b = bomb.Bomb(lst_x[i], lst_y[i], bomb_size, self.bombs)
+            lst_b, lst_e = stub.show_progression_client()
+            lst_x_b, lst_y_b = self.organize(lst_b)
+            lst_x_e, lst_y_e = self.organize(lst_e)
+            size_b = len(lst_x_b)
+            size_e = len(lst_x_e)
+            for i in range(0, size_b):
+                b = bomb.Bomb(lst_x_b[i], lst_y_b[i], bomb_size, self.bombs)
                 self.bombs.add(b)
+            for i in range(0, size_e):
+                e = explosion.Explosion(lst_x_e[i], lst_y_e[i], bomb_size, self.explosions)
+                self.explosions.add(e)
             self.wait_time = 0
-
         else:
             self.players.update(self, self.stub)
 
@@ -110,15 +112,6 @@ class Game(object):
         print("y o", lst_y)
         return lst_x, lst_y
 
-    def update_explosions(self, explosion_size:int):
-        explosion_now = self.gm.get_world()
-        for x in range(0,self.x_max-1):
-            for y in range(0,self.y_max-1):
-                if explosion_now[(x, y)] != [] and explosion_now[(x, y)][0][1] == "explosion":
-                    e = explosion.Explosion(x, y, explosion_size, self.explosions)
-                    self.explosions.add(e)
-
-
     def run(self, stub):
         #Create Sprites
         self.create_walls(self.grid_size)
@@ -137,30 +130,29 @@ class Game(object):
                     end = True
 
             self.update_bombs(self.grid_size, self.stub, dt)
+
             self.bombs.update(dt)
 
             #self.update_explosions(self.grid_size)
 
 
 
-            #self.explosions.update(self.gm)
             bombas = self.bombs.draw(self.screen)
-            #explosions = self.explosions.draw(self.screen)
-            #self.explosions.update(dt)
+            explosions = self.explosions.draw(self.screen)
+            self.explosions.update(dt)
 
             rects = self.players.draw(self.screen)
-            #rects3 = self.explosions.draw(self.screen)
+            rects3 = self.explosions.draw(self.screen)
 
-            #pygame.display.update(rects2)
-            #pygame.display.update(rects3)
+            pygame.display.update(rects3)
             pygame.display.update(rects)
             pygame.display.update(bombas)
-            #pygame.display.update(explosions)
+            pygame.display.update(explosions)
 
             self.walls.draw(self.screen)
             self.bombs.draw(self.screen)  # draw bombs here
             self.players.draw(self.screen)
-            #self.explosions.draw(self.screen)
+            self.explosions.draw(self.screen)
             self.draw_grid(self.black)
 
             pygame.display.update()
@@ -168,7 +160,7 @@ class Game(object):
             self.players.clear(self.screen,self.background)
             self.bombs.clear(self.screen, self.background)
 
-            #self.explosions.clear(self.screen, self.background)
+            self.explosions.clear(self.screen, self.background)
 
             # Verify if somebody blew up
             #if self.gm.somebody_blew_up() == True:

@@ -14,7 +14,7 @@ class Explosion(pygame.sprite.Sprite):
     def get_size(self):
         return self.new_size
 
-    def update(self, game: object, dt):
+    def update(self, dt):
         self.ticks += dt
         if self.ticks / 1000 >= 1:
             self.kill()

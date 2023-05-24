@@ -9,6 +9,7 @@ ESQUERDA = "esqu"
 DIREITA = "dire"
 ESPACO = "espa"
 SHOW_BOMBS = "shbb"
+SHOW_PROGRESSION = "prog"
 SHOW_EXPLOSIONS = "shep"
 TAMANHO_MENSAGEM = 40
 N_BYTES = 2
