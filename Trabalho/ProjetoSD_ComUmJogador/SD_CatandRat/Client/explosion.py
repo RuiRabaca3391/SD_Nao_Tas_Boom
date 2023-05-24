@@ -16,6 +16,7 @@ class Explosion(pygame.sprite.Sprite):
 
     def update(self, dt):
         self.ticks += dt
-        if self.ticks / 1000 >= 1:
+        print(self.ticks)
+        if self.ticks / 1000 >= 3:
             self.kill()
         self.dirty = 1

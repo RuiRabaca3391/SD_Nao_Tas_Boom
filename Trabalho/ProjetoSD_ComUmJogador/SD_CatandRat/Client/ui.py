@@ -132,19 +132,19 @@ class Game(object):
             self.update_bombs(self.grid_size, self.stub, dt)
 
             self.bombs.update(dt)
-
+            self.explosions.update(dt)
             #self.update_explosions(self.grid_size)
 
 
 
             bombas = self.bombs.draw(self.screen)
             explosions = self.explosions.draw(self.screen)
-            self.explosions.update(dt)
+
 
             rects = self.players.draw(self.screen)
-            rects3 = self.explosions.draw(self.screen)
+            #rects3 = self.explosions.draw(self.screen)
 
-            pygame.display.update(rects3)
+            #pygame.display.update(rects3)
             pygame.display.update(rects)
             pygame.display.update(bombas)
             pygame.display.update(explosions)
