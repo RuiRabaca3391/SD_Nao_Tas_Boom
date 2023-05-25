@@ -18,6 +18,7 @@ class SkeletonServer:
         self.s.bind((constante.ENDERECO_SERVIDOR, constante.PORTO))
         self.s.listen()
         self.clock = pygame.time.Clock()
+        self.player_list = []
 
     def processa_movimento_up(self,s_c,  dados_pl):
 
@@ -95,6 +96,12 @@ class SkeletonServer:
 
         return lst_b, lst_e
 
+    def collect_and_send_player(self, s_c):
+        self.player_list.append("player")
+        i = len(self.player_list)
+        s_c.send(i.to_bytes(constante.N_BYTES, byteorder="big", signed=True))
+
+
     def run(self):
         logging.info("a escutar no porto " + str(constante.PORTO))
         socket_client, endereco = self.s.accept()
@@ -121,6 +128,10 @@ class SkeletonServer:
             if dados == constante.SHOW_PROGRESSION:
 
                 self.collect_and_send_progress(socket_client)
+
+            if dados == constante.GET_PLAYER:
+
+                self.collect_and_send_player(socket_client)
 
             if dados == constante.CIMA:
 

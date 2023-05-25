@@ -34,51 +34,51 @@ class Player(pygame.sprite.DirtySprite):
         # Keep visible
         self.dirty = 1
 
-    def update(self, game: object, stub: object):
+    def update(self, game: object, stub: object, player: str):
+        if player == "p1":
+            last = self.rect.copy()
+            key = pygame.key.get_pressed()
+            # Para qualqer tecla, há que pedir ao Game Mech que nova posição
+            # o jogador ocupa
+            if key[pygame.K_LEFT]:
 
-        last = self.rect.copy()
-        key = pygame.key.get_pressed()
-        # Para qualqer tecla, há que pedir ao Game Mech que nova posição
-        # o jogador ocupa
-        if key[pygame.K_LEFT]:
+                lst = stub.esquerda("p1")
+                self.rect.x = lst[0] * self.sq_size
+                self.rect.y = lst[1] * self.sq_size
 
-            lst = stub.esquerda("p1")
-            self.rect.x = lst[0] * self.sq_size
-            self.rect.y = lst[1] * self.sq_size
+            if key[pygame.K_RIGHT]:
 
-        if key[pygame.K_RIGHT]:
+                lst = stub.direita("p1")
+                self.rect.x = lst[0] * self.sq_size
+                self.rect.y = lst[1] * self.sq_size
 
-            lst = stub.direita("p1")
-            self.rect.x = lst[0] * self.sq_size
-            self.rect.y = lst[1] * self.sq_size
+            if key[pygame.K_UP]:
 
-        if key[pygame.K_UP]:
+                lst = stub.cima("p1")
+                self.rect.x = lst[0] * self.sq_size
+                self.rect.y = lst[1] * self.sq_size
 
-            lst = stub.cima("p1")
-            self.rect.x = lst[0] * self.sq_size
-            self.rect.y = lst[1] * self.sq_size
+            if key[pygame.K_DOWN]:
 
-        if key[pygame.K_DOWN]:
+                lst = stub.baixo("p1")
+                self.rect.x = lst[0] * self.sq_size
+                self.rect.y = lst[1] * self.sq_size
 
-            lst = stub.baixo("p1")
-            self.rect.x = lst[0] * self.sq_size
-            self.rect.y = lst[1] * self.sq_size
+            if key[pygame.K_SPACE]:
+                stub.espaco("p1")
 
-        if key[pygame.K_SPACE]:
-            stub.espaco("p1")
-
-        new = self.rect
-        for cell in pygame.sprite.spritecollide(self, game.walls, False):
-            self.rect = last
-            cell = cell.rect
-            if last.right <= cell.left and new.right > cell.left:
-                new.right = cell.left
-            if last.left >= cell.right and new.left < cell.right:
-                new.left = cell.right
-            if last.bottom <= cell.top and new.bottom > cell.top:
-                new.bottom = cell.top
-            if last.top >= cell.bottom and new.top < cell.bottom:
-                new.top = cell.bottom
-        #game.update_bombs(self.sq_size, stub)
-        # Keep visible
-        self.dirty = 1
+            new = self.rect
+            for cell in pygame.sprite.spritecollide(self, game.walls, False):
+                self.rect = last
+                cell = cell.rect
+                if last.right <= cell.left and new.right > cell.left:
+                    new.right = cell.left
+                if last.left >= cell.right and new.left < cell.right:
+                    new.left = cell.right
+                if last.bottom <= cell.top and new.bottom > cell.top:
+                    new.bottom = cell.top
+                if last.top >= cell.bottom and new.top < cell.bottom:
+                    new.top = cell.bottom
+            #game.update_bombs(self.sq_size, stub)
+            # Keep visible
+            self.dirty = 1

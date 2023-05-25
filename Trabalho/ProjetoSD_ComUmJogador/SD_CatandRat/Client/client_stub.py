@@ -61,6 +61,21 @@ class StubClient:
 
         return lst
 
+    def get_me(self):
+        msg = constante.GET_PLAYER
+        self.s.send(msg.encode(constante.CODIFICACAO_STR))
+
+        msg = "fake"
+        self.s.send(msg.encode(constante.CODIFICACAO_STR))
+
+        dados_recebidos_1: bytes = self.s.recv(constante.N_BYTES)
+        i = int.from_bytes(dados_recebidos_1, byteorder='big', signed=True)
+        if i == 1:
+            ret = "p1"
+        elif i == 2 :
+            ret = "p2"
+
+        return ret
 
     def esquerda(self, nr_player: str) -> Union[int, None]:
 

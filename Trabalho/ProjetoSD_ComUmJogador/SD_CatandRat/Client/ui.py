@@ -93,7 +93,10 @@ class Game(object):
                 self.explosions.add(e)
             self.wait_time = 0
         else:
-            self.players.update(self, self.stub)
+            self.players.update(self, self.stub, self.me)
+
+    def check_me(self):
+        self.me = self.stub.get_me()
 
     def organize(self, lst: list):
         lst_x = []
@@ -119,6 +122,8 @@ class Game(object):
         self.create_players(self.grid_size)
         self.stub = stub
 
+        self.check_me()
+        print(self.me)
 
         end = False
         while end == False:
