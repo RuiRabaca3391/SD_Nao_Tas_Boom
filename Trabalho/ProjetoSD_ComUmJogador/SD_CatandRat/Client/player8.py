@@ -34,7 +34,7 @@ class Player(pygame.sprite.DirtySprite):
         # Keep visible
         self.dirty = 1
 
-    def update(self, game: object, stub: object, player: str):
+    def update(self, game: object, stub: object, player: str, play_coords_adv: list):
         if player == "p1":
             last = self.rect.copy()
             key = pygame.key.get_pressed()
@@ -80,5 +80,11 @@ class Player(pygame.sprite.DirtySprite):
                 if last.top >= cell.bottom and new.top < cell.bottom:
                     new.top = cell.bottom
             #game.update_bombs(self.sq_size, stub)
+            # Keep visible
+            self.dirty = 1
+
+        elif player == "p2":
+            self.rect.x = play_coords_adv[0] * self.sq_size
+            self.rect.y = play_coords_adv[1] * self.sq_size
             # Keep visible
             self.dirty = 1

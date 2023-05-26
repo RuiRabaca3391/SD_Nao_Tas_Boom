@@ -42,6 +42,7 @@ class Game(object):
         self.wait_time = 0
         self.go_ahead = True
         self.go_update = True
+        self.play_adv = []
         pygame.display.update()
 
 
@@ -80,7 +81,7 @@ class Game(object):
         self.wait_time += dt
 
         if self.wait_time / 1000 >= 1:
-            lst_b, lst_e = stub.show_progression_client()
+            lst_b, lst_e, self.play_adv = stub.show_progression_client(self.me)
             lst_x_b, lst_y_b = self.organize(lst_b)
             lst_x_e, lst_y_e = self.organize(lst_e)
             size_b = len(lst_x_b)
@@ -93,7 +94,7 @@ class Game(object):
                 self.explosions.add(e)
             self.wait_time = 0
         else:
-            self.players.update(self, self.stub, self.me)
+            self.players.update(self, self.stub, self.me, self.play_adv)
 
     def check_me(self):
         self.me = self.stub.get_me()

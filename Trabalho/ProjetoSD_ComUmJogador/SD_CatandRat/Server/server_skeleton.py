@@ -59,7 +59,7 @@ class SkeletonServer:
         # Meter depois o nome do jogador
         self.gm_obj.bomb_maker(dados_pl)
 
-    def collect_and_send_progress(self, s_c):
+    def collect_and_send_progress(self, s_c, nr_player):
 
         lst_b = []
         lst_e = []
@@ -94,6 +94,10 @@ class SkeletonServer:
             for i in lst:
                 s_c.send(i.to_bytes(constante.N_BYTES, byteorder="big", signed=True))
 
+        x, y = self.gm_obj.collect_player_adv(nr_player)
+        s_c.send(x.to_bytes(constante.N_BYTES, byteorder="big", signed=True))
+        s_c.send(y.to_bytes(constante.N_BYTES, byteorder="big", signed=True))
+
         return lst_b, lst_e
 
     def collect_and_send_player(self, s_c):
@@ -127,7 +131,7 @@ class SkeletonServer:
 
             if dados == constante.SHOW_PROGRESSION:
 
-                self.collect_and_send_progress(socket_client)
+                self.collect_and_send_progress(socket_client, dados_pl)
 
             if dados == constante.GET_PLAYER:
 

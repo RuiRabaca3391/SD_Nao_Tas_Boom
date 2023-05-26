@@ -56,6 +56,16 @@ class GameMech:
                     lst.append(y)
         return lst
 
+    def collect_player_adv(self, nr_player):
+        if nr_player == "p2":
+            x = self.players[0][1][0]
+            y = self.players[0][1][1]
+        elif nr_player == "p1":
+            x = self.players[1][1][0]
+            y = self.players[1][1][1]
+
+        return x, y
+
     # Tracking time ticks for bombs and calling explosion the time ticks function
     def bomb_ticking(self, ticks):
         for x in range(0, self.x_max - 1):

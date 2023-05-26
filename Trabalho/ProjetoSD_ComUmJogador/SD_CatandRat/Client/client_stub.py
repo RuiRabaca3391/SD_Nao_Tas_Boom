@@ -126,17 +126,18 @@ class StubClient:
         msg = nr_player
         self.s.send(msg.encode(constante.CODIFICACAO_STR))
 
-    def show_progression_client(self):
+    def show_progression_client(self, nr_player: str):
 
         msg = constante.SHOW_PROGRESSION
         self.s.send(msg.encode(constante.CODIFICACAO_STR))
 
         # Manda o numero do jogador
-        msg = "fake"
+        msg = nr_player
         self.s.send(msg.encode(constante.CODIFICACAO_STR))
 
         lst_b = []
         lst_e = []
+        lst_p = []
 
         # Recebe o tamanho bombas
         dados_recebidos_size: bytes = self.s.recv(constante.N_BYTES)
@@ -159,7 +160,16 @@ class StubClient:
                 dados_recebidos_coords: bytes = self.s.recv(constante.N_BYTES)
                 lst_e.append(int.from_bytes(dados_recebidos_coords, byteorder='big', signed=True))
             print("Server gettting : ", lst_e)
-        return lst_b, lst_e
+
+        # Coordenadas do player adversário
+        dados_recebidos_coords_1: bytes = self.s.recv(constante.N_BYTES)
+        lst_p.append(int.from_bytes(dados_recebidos_coords_1, byteorder='big', signed=True))
+
+        dados_recebidos_coords_2: bytes = self.s.recv(constante.N_BYTES)
+        lst_p.append(int.from_bytes(dados_recebidos_coords_2, byteorder='big', signed=True))
+        print("Server gettting : ", lst_p)
+
+        return lst_b, lst_e, lst_p
 
     def show_explosions_client(self):
 
