@@ -20,7 +20,7 @@ class SkeletonServer:
         self.s.bind((constante.ENDERECO_SERVIDOR, constante.PORTO))
         self.s.listen()
         self.clock = pygame.time.Clock()
-
+        self.player_list = []
         #------------------------------------------
         # Added timeout
         self.s.settimeout(constante.ACCEPT_TIMEOUT)
@@ -46,7 +46,8 @@ class SkeletonServer:
             if socket_client is not None:
                 # Add client
                 # self._state.add_client(socket_client)
-                ClientSession(socket_client, self.gm).start()
+                self.player_list.append("player")
+                ClientSession(socket_client, self.gm, self.player_list).start()
 
         self.s.close()
 

@@ -79,11 +79,11 @@ class Player(pygame.sprite.DirtySprite):
                     new.bottom = cell.top
                 if last.top >= cell.bottom and new.top < cell.bottom:
                     new.top = cell.bottom
-            #game.update_bombs(self.sq_size, stub)
+            # game.update_bombs(self.sq_size, stub)
             # Keep visible
             self.dirty = 1
 
-        elif player == "p2":
+        elif player == "p2" and play_coords_adv != []:
             self.rect.x = play_coords_adv[0] * self.sq_size
             self.rect.y = play_coords_adv[1] * self.sq_size
             # Keep visible

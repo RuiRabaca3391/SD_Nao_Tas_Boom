@@ -62,6 +62,9 @@ class Game(object):
         self.playerA = Client.player8.Player(0, 1,1,size,self.players)
         #self.playerB = Client.player_rato.PlayerR(0, 13, 11, size, self.players)
         self.players.add(self.playerA)
+        self.playerB = Client.player_rato.PlayerR(0, 13, 11, size, self.players)
+        # self.playerB = Client.player_rato.PlayerR(0, 13, 11, size, self.players)
+        self.players.add(self.playerB)
         #self.players.add(self.playerB)
 
     def create_walls(self, wall_size:int):
@@ -80,7 +83,7 @@ class Game(object):
 
         self.wait_time += dt
 
-        if self.wait_time / 1000 >= 1:
+        if self.wait_time / 1000 >= 0.5:
             lst_b, lst_e, self.play_adv = stub.show_progression_client(self.me)
             lst_x_b, lst_y_b = self.organize(lst_b)
             lst_x_e, lst_y_e = self.organize(lst_e)
@@ -174,11 +177,4 @@ class Game(object):
                 #pygame.display.quit()
                 #pygame.quit()
                 #sys.exit()
-
-
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    pygame.init()
-    gm = Game(15,13,65)
-    gm.run()
 

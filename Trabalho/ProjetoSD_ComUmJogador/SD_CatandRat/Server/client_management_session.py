@@ -9,7 +9,7 @@ import pygame
 class ClientSession(Thread):
     """Maintains a session with the client"""
 
-    def __init__(self, socket_client: int,  game_mech: GameMech):
+    def __init__(self, socket_client: int,  game_mech: GameMech, player_list: list):
         """
         Constructs a thread to hold a session with the client
         :param shared_state: The server's state shared by threads
@@ -20,7 +20,7 @@ class ClientSession(Thread):
         self.socket_client = socket_client
         self.gm_obj = game_mech
         self.clock = pygame.time.Clock()
-        self.player_list = []
+        self.player_list = player_list
 
     def processa_movimento_up(self,s_c,  dados_pl):
 
@@ -103,7 +103,7 @@ class ClientSession(Thread):
         return lst_b, lst_e
 
     def collect_and_send_player(self, s_c):
-        self.player_list.append("player")
+
         i = len(self.player_list)
         s_c.send(i.to_bytes(constante.N_BYTES, byteorder="big", signed=True))
 
