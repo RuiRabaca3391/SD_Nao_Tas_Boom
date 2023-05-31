@@ -112,15 +112,38 @@ class GameMech:
 
     # Checking if everybody is still in one piece
     def somebody_blew_up(self):
-        for x in range(0,self.x_max-1):
-            for y in range(0,self.y_max-1):
-                check_it = []
-                if self.world[(x, y)] != [] and len(self.world[(x, y)]) > 1:
-                    for i in self.world[(x, y)]:
-                        check_it.append(i[1])
-                    #print(check_it)
-                if ("p1" in check_it or "p2" in check_it) and "explosion" in check_it:
-                    return True
+        print("beginning")
+        x = self.players[0][1][0]
+        y = self.players[0][1][1]
+        if len(self.world[(x, y)]) > 1:
+            check_it = []
+            print("after mid")
+            for i in self.world[(x, y)]:
+                check_it.append(i[1])
+                print("here")
+                print("i", i)
+                print("check",check_it)
+
+            if ("p1" in check_it) and ("explosion" in check_it):
+                return 1
+
+
+        x = self.players[1][1][0]
+        y = self.players[1][1][1]
+        if len(self.world[(x, y)]) > 1:
+            check_it = []
+            print("after mid")
+            for i in self.world[(x, y)]:
+                check_it.append(i[1])
+                print("here")
+                print("i", i)
+                print("check", check_it)
+
+            if ("p2" in check_it) and ("explosion" in check_it):
+                return 2
+
+        return 0
+
 
     # Explosions time tick tracker
     def explosion_ticking(self, ticks):
@@ -154,12 +177,6 @@ class GameMech:
         test = self.world[(new_x, new_y)]
 
         if test == []:
-            print("X", x)
-            print("Y", y)
-            print("New_X", new_x)
-            print("New_Y", new_y)
-            print("name", name, player_order)
-            print("World", self.world[(x, y)])
             self.world[(x, y)].remove(["player", name, player_order])
             self.world[(new_x, new_y)].append(["player", name, player_order])
             # Alterar o jogador: colocar o jogador na nova posição
@@ -215,7 +232,6 @@ class GameMech:
         # Alterar o mundo - retirar o jogador em posição anterior e colocá-lo na nova posição
         # Atenção: Há que verificar que a nova posição não é umobstáculo. Se for, o jogador fica na mesma posição.
         test = self.world[(new_x, new_y)]
-        print(test)
 
         if test == []:
             print(self.world[(x, y)])

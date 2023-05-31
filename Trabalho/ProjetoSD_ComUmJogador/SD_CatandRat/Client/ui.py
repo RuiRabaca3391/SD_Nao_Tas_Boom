@@ -84,9 +84,19 @@ class Game(object):
         self.wait_time += dt
 
         if self.wait_time / 1000 >= 0.5:
-            lst_b, lst_e, self.play_adv = stub.show_progression_client(self.me)
+            lst_b, lst_e, self.play_adv, players_down = stub.show_progression_client(self.me)
             lst_x_b, lst_y_b = self.organize(lst_b)
             lst_x_e, lst_y_e = self.organize(lst_e)
+            if players_down != "fake":
+                print("GAME ENDED WITH A BOOM!!!")
+                if self.me == players_down:
+                    print("Perdeu")
+                else:
+                    print("Ganhou!")
+                pygame.display.quit()
+                pygame.quit()
+                sys.exit()
+
             size_b = len(lst_x_b)
             size_e = len(lst_x_e)
             for i in range(0, size_b):
@@ -108,15 +118,11 @@ class Game(object):
         size = len(lst)
         cont = 0
         for i in lst:
-            print("i :", i)
-            print("index : ", lst.index(i))
             if cont == 0 or cont % 2 == 0:
                 lst_x.append(i)
             else:
                 lst_y.append(i)
             cont += 1
-        print("x o", lst_x)
-        print("y o", lst_y)
         return lst_x, lst_y
 
     def run(self, stub):

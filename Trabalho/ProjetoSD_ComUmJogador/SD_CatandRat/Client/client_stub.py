@@ -169,7 +169,17 @@ class StubClient:
         lst_p.append(int.from_bytes(dados_recebidos_coords_2, byteorder='big', signed=True))
         print("Server gettting : ", lst_p)
 
-        return lst_b, lst_e, lst_p
+        dados_recebidos_player_mortos: bytes = self.s.recv(constante.N_BYTES)
+        players = int.from_bytes(dados_recebidos_player_mortos, byteorder='big', signed=True)
+        if players == 1:
+            ret = "p1"
+        elif players == 2:
+            ret = "p2"
+        else:
+            ret = "fake"
+        print("Server gettting : ", ret)
+
+        return lst_b, lst_e, lst_p, ret
 
     def show_explosions_client(self):
 

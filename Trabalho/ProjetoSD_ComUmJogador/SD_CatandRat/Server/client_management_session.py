@@ -34,7 +34,6 @@ class ClientSession(Thread):
         # Meter depois o nome do jogador
         new_stuff_1, new_stuff_2 = self.gm_obj.go_down(dados_pl)
         #new_stuff_1 = str(new_stuff_1)
-        print("hello",new_stuff_1)
         #new_stuff_2 = str(new_stuff_2)
         # Mandar as coordenadas
         s_c.send(new_stuff_1.to_bytes(constante.N_BYTES, byteorder="big", signed=True))
@@ -84,7 +83,6 @@ class ClientSession(Thread):
         for x in range(0, self.gm_obj.x_max - 1):
             for y in range(0, self.gm_obj.y_max - 1):
                 if self.gm_obj.world[(x, y)] != [] and self.gm_obj.world[(x, y)][0][1] == "explosion":
-                    print("I Exist")
                     lst_e.append(x)
                     lst_e.append(y)
 
@@ -92,13 +90,16 @@ class ClientSession(Thread):
         s_c.send(size.to_bytes(constante.N_BYTES, byteorder="big", signed=True))
         if size != 0:
             lst = self.gm_obj.collect_explosions()
-            print("Lista exp : ", lst)
             for i in lst:
                 s_c.send(i.to_bytes(constante.N_BYTES, byteorder="big", signed=True))
 
         x, y = self.gm_obj.collect_player_adv(nr_player)
         s_c.send(x.to_bytes(constante.N_BYTES, byteorder="big", signed=True))
         s_c.send(y.to_bytes(constante.N_BYTES, byteorder="big", signed=True))
+
+        response = self.gm_obj.somebody_blew_up()
+        print("Response", response)
+        s_c.send(response.to_bytes(constante.N_BYTES, byteorder="big", signed=True))
 
         return lst_b, lst_e
 
