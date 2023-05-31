@@ -22,7 +22,7 @@ class GameMech:
         self.players[0] = ["p1", (1, 1)]
         self.world[(1, 1)].append(["player", "p1", 0])
         self.players[1] = ["p2", (13, 11)]
-        self.world[(2, 2)].append(["player", "p2", 1])
+        self.world[(13, 11)].append(["player", "p2", 1])
 
     # Placing bombs in the grid
     def bomb_maker(self, nr_player):
@@ -154,7 +154,12 @@ class GameMech:
         test = self.world[(new_x, new_y)]
 
         if test == []:
-            print(self.world[(x, y)])
+            print("X", x)
+            print("Y", y)
+            print("New_X", new_x)
+            print("New_Y", new_y)
+            print("name", name, player_order)
+            print("World", self.world[(x, y)])
             self.world[(x, y)].remove(["player", name, player_order])
             self.world[(new_x, new_y)].append(["player", name, player_order])
             # Alterar o jogador: colocar o jogador na nova posição
